@@ -113,9 +113,6 @@
     <ClInclude Include="Renders\Texture.h">
       <Filter>Renders</Filter>
     </ClInclude>
-    <ClInclude Include="Renders\VertexLayouts.h">
-      <Filter>Renders</Filter>
-    </ClInclude>
     <ClInclude Include="Renders\Context.h">
       <Filter>Renders</Filter>
     </ClInclude>
