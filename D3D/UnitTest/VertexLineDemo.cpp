@@ -5,9 +5,8 @@ void VertexLineDemo::Initialize()
 {
 	shader = new Shader(L"01_Line.fxo");
 
-
-	vertices[0].Position = Vector3(0, 0, 0);
-	vertices[1].Position = Vector3(1, 0, 0);
+	vertices[0].Posision = Vector3(0, 0, 0);
+	vertices[1].Posision = Vector3(1, 0, 0);
 
 	D3D11_BUFFER_DESC desc;
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
@@ -23,22 +22,20 @@ void VertexLineDemo::Initialize()
 void VertexLineDemo::Destroy()
 {
 	SafeDelete(shader);
-	SafeRelease(vertexBuffer);		//delete x
-
+	SafeRelease(vertexBuffer);
 }
 
 void VertexLineDemo::Update()
 {
-
 }
 
 void VertexLineDemo::Render()
-{	//파이프라인 동작코드
+{
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-	D3D::GetDC()->IASetVertexBuffers(0,1, &vertexBuffer,&stride,&offset);
+	D3D::GetDC()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 
-	shader->Draw(0,0,2);
+	shader->Draw(0, 0, 2);
 }

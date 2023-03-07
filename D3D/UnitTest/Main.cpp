@@ -1,16 +1,23 @@
 #include "stdafx.h"
 #include "Main.h"
 #include "Systems/Window.h"
+
 #include "VertexLineDemo.h"
 #include "VertexLineColorDemo.h"
 #include "VertexTopologyDemo.h"
 #include "TriangleDemo.h"
 #include "RectDemo.h"
 #include "WorldDemo.h"
+#include "GridDemo.h"
+#include "CubeDemo.h"
+#include "TextureDemo.h"
+#include "SamplerStateDemo.h"
+#include "TerrainDemo.h"
+#include "MeshDemo.h"
 
 void Main::Initialize()
 {
-	Push(new WorldDemo());
+	Push(new MeshDemo());
 }
 
 

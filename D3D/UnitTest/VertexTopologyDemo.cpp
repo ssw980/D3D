@@ -3,17 +3,16 @@
 
 void VertexTopologyDemo::Initialize()
 {
-	shader = new Shader(L"03_Pass.fx");
+	shader = new Shader(L"03_Pass.fxo");
 
+	vertices[0].Posision = Vector3(0, 0, 0);
+	vertices[1].Posision = Vector3(1, 0, 0);
 
-	vertices[0].Position = Vector3(0, 0, 0);
-	vertices[1].Position = Vector3(1, 0, 0);
+	vertices[2].Posision = Vector3(0, +0.5f, 0);
+	vertices[3].Posision = Vector3(1, +0.5f, 0);
 
-	vertices[2].Position = Vector3(0,+ 0.5f, 0);
-	vertices[3].Position = Vector3(1, +0.5f, 0);
-
-	vertices[4].Position = Vector3(0, -0.5f, 0);
-	vertices[5].Position = Vector3(1, -0.5f, 0);
+	vertices[4].Posision = Vector3(0, -0.5f, 0);
+	vertices[5].Posision = Vector3(1, -0.5f, 0);
 
 	D3D11_BUFFER_DESC desc;
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
@@ -29,8 +28,7 @@ void VertexTopologyDemo::Initialize()
 void VertexTopologyDemo::Destroy()
 {
 	SafeDelete(shader);
-	SafeRelease(vertexBuffer);		//delete x
-
+	SafeRelease(vertexBuffer);
 }
 
 void VertexTopologyDemo::Update()
@@ -39,7 +37,7 @@ void VertexTopologyDemo::Update()
 }
 
 void VertexTopologyDemo::Render()
-{	//파이프라인 동작코드
+{
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
@@ -56,24 +54,26 @@ void VertexTopologyDemo::Render()
 
 		D3D::GetDC()->IASetPrimitiveTopology(bStrip ? topologies[1] : topologies[0]);
 	}
+
 	//Pass Test
-		static int pass;
+	static int pass;
 	{
 		ImGui::InputInt("Pass", &pass);
-		pass = (int)Math::Clamp(pass,0,3);
+		pass = (int)Math::Clamp(pass, 0, 3);
 
 		static Color color;
 		ImGui::ColorEdit3("Color", color);
 		shader->AsVector("CustomColor")->SetFloatVector(color);
 	}
 
-	//startLocation Test
+	//Start Location Test
 	static int startLocation;
 	{
-		ImGui::SliderInt("Start", &startLocation,0,6);
+		ImGui::SliderInt("Start", &startLocation, 0, 6);
 	}
 
-	D3D::GetDC()->IASetVertexBuffers(0,1, &vertexBuffer,&stride,&offset);
 
-	shader->Draw(0, pass,6, startLocation);
+	D3D::GetDC()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+
+	shader->Draw(0, pass, 6, startLocation);
 }

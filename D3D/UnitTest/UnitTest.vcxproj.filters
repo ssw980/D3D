@@ -4,13 +4,13 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="stdafx.cpp" />
     <ClCompile Include="VertexLineColorDemo.cpp">
-      <Filter>Vertex</Filter>
+      <Filter>Vrertex</Filter>
     </ClCompile>
     <ClCompile Include="VertexLineDemo.cpp">
-      <Filter>Vertex</Filter>
+      <Filter>Vrertex</Filter>
     </ClCompile>
     <ClCompile Include="VertexTopologyDemo.cpp">
-      <Filter>Vertex</Filter>
+      <Filter>Vrertex</Filter>
     </ClCompile>
     <ClCompile Include="TriangleDemo.cpp">
       <Filter>Section</Filter>
@@ -21,21 +21,36 @@
     <ClCompile Include="WorldDemo.cpp">
       <Filter>World</Filter>
     </ClCompile>
-    <ClCompile Include="GreedDemo.cpp">
+    <ClCompile Include="GridDemo.cpp">
       <Filter>Section</Filter>
+    </ClCompile>
+    <ClCompile Include="CubeDemo.cpp">
+      <Filter>Section</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureDemo.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="SamplerStateDemo.cpp">
+      <Filter>Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainDemo.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="MeshDemo.cpp">
+      <Filter>Meshes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h" />
     <ClInclude Include="stdafx.h" />
-    <ClInclude Include="VertexLineDemo.h">
-      <Filter>Vertex</Filter>
-    </ClInclude>
     <ClInclude Include="VertexLineColorDemo.h">
-      <Filter>Vertex</Filter>
+      <Filter>Vrertex</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexLineDemo.h">
+      <Filter>Vrertex</Filter>
     </ClInclude>
     <ClInclude Include="VertexTopologyDemo.h">
-      <Filter>Vertex</Filter>
+      <Filter>Vrertex</Filter>
     </ClInclude>
     <ClInclude Include="TriangleDemo.h">
       <Filter>Section</Filter>
@@ -46,19 +61,43 @@
     <ClInclude Include="WorldDemo.h">
       <Filter>World</Filter>
     </ClInclude>
-    <ClInclude Include="GreedDemo.h">
+    <ClInclude Include="GridDemo.h">
       <Filter>Section</Filter>
+    </ClInclude>
+    <ClInclude Include="CubeDemo.h">
+      <Filter>Section</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureDemo.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="SamplerStateDemo.h">
+      <Filter>Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainDemo.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="MeshDemo.h">
+      <Filter>Meshes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Vertex">
-      <UniqueIdentifier>{2b558723-0189-401d-87f8-48a28fc164a3}</UniqueIdentifier>
+    <Filter Include="Vrertex">
+      <UniqueIdentifier>{dcbf1656-428f-4d1c-91a0-5341b7891e9b}</UniqueIdentifier>
     </Filter>
     <Filter Include="Section">
-      <UniqueIdentifier>{eccabaf0-d124-4f81-bec8-ff1e342f4f19}</UniqueIdentifier>
+      <UniqueIdentifier>{383cba42-d4d5-4ddf-9713-eec0be0c2214}</UniqueIdentifier>
     </Filter>
     <Filter Include="World">
-      <UniqueIdentifier>{b3b4470f-a102-469a-865c-ea495a1d1551}</UniqueIdentifier>
+      <UniqueIdentifier>{6a949059-b36a-453b-9060-2a311b7fe77c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Texture">
+      <UniqueIdentifier>{adee8c8b-3678-4964-a854-1c001b48ea77}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{12cbb54a-b405-438e-acc6-e5d19ec3aa26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{2fb8b96d-4d0b-4792-9d9a-ebd00c3cd2b7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

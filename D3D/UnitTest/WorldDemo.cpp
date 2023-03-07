@@ -5,14 +5,12 @@ void WorldDemo::Initialize()
 {
 	shader = new Shader(L"05_World.fxo");
 
-
 	//Create Vertex
 	{
-		vertices[0].Position = Vector3(-0.5f, -0.5f, 0.0f);
-		vertices[1].Position = Vector3(-0.5f, +0.5f, 0.0f);
-		vertices[2].Position = Vector3(+0.5f, -0.5f, 0.0f);
-		vertices[3].Position = Vector3(+0.5f, +0.5f, 0.0f);
-
+		vertices[0].Posision = Vector3(-0.5f, -0.5f, 0.0f);
+		vertices[1].Posision = Vector3(-0.5f, +0.5f, 0.0f);
+		vertices[2].Posision = Vector3(+0.5f, -0.5f, 0.0f);
+		vertices[3].Posision = Vector3(+0.5f, +0.5f, 0.0f);
 
 		D3D11_BUFFER_DESC desc;
 		ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
@@ -25,7 +23,7 @@ void WorldDemo::Initialize()
 		Check(D3D::GetDevice()->CreateBuffer(&desc, &subResource, &vertexBuffer));
 	}
 
-	//create index
+	//Create Index
 	{
 		indices[0] = 0;
 		indices[1] = 1;
@@ -38,31 +36,26 @@ void WorldDemo::Initialize()
 		ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
 		desc.ByteWidth = sizeof(UINT) * 6;
 		desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
 		D3D11_SUBRESOURCE_DATA subResource = { 0 };
 		subResource.pSysMem = indices;
 
 		Check(D3D::GetDevice()->CreateBuffer(&desc, &subResource, &indexBuffer));
-
 	}
 
-										//initialize
-	D3DXMatrixIdentity(&world);		
-	
+	D3DXMatrixIdentity(&world);
 }
 
 void WorldDemo::Destroy()
 {
 	SafeDelete(shader);
-	SafeRelease(vertexBuffer);		//delete x
-	SafeRelease(indexBuffer);		
+	SafeRelease(vertexBuffer);
+	SafeRelease(indexBuffer);
 }
 
 void WorldDemo::Update()
 {
-#ifdef Matrix Member Edit
-
-
-
+#ifdef Matrix Memeber Edit
 	if (Keyboard::Get()->Press(VK_SHIFT))
 	{
 		if (Keyboard::Get()->Press(VK_RIGHT))
@@ -102,7 +95,6 @@ void WorldDemo::Update()
 		position.y -= 2.0f * Time::Delta();
 
 	Matrix S, T;
-
 	D3DXMatrixScaling(&S, scale.x, scale.y, scale.z);
 	D3DXMatrixTranslation(&T, position.x, position.y, position.z);
 	world = S * T;
@@ -113,19 +105,18 @@ void WorldDemo::Update()
 }
 
 void WorldDemo::Render()
-{	
-	//파이프라인 동작코드
+{
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	D3D::GetDC()->IASetVertexBuffers(0,1, &vertexBuffer,&stride,&offset);
-	D3D::GetDC()->IASetIndexBuffer(indexBuffer,DXGI_FORMAT_R32_UINT,0);
+	D3D::GetDC()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
+	D3D::GetDC()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
 	static int pass = 0;
 	ImGui::InputInt("Pass", &pass);
 	pass %= 2;
 
-	shader->DrawIndexed(0,pass,6);
+	shader->DrawIndexed(0, pass, 6);
 
 }

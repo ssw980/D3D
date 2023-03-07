@@ -14,6 +14,9 @@
     <ClCompile Include="Viewer\Viewport.cpp">
       <Filter>Viewer</Filter>
     </ClCompile>
+    <ClCompile Include="Utilities\BinaryFile.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
     <ClCompile Include="Utilities\Math.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
@@ -26,8 +29,8 @@
     <ClCompile Include="Utilities\Xml.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Utilities\BinaryFile.cpp">
-      <Filter>Utilities</Filter>
+    <ClCompile Include="Systems\D3D.cpp">
+      <Filter>Systems</Filter>
     </ClCompile>
     <ClCompile Include="Systems\Gui.cpp">
       <Filter>Systems</Filter>
@@ -44,17 +47,35 @@
     <ClCompile Include="Systems\Window.cpp">
       <Filter>Systems</Filter>
     </ClCompile>
-    <ClCompile Include="Systems\D3D.cpp">
-      <Filter>Systems</Filter>
-    </ClCompile>
-    <ClCompile Include="Renders\Texture.cpp">
-      <Filter>Renders</Filter>
-    </ClCompile>
     <ClCompile Include="Renders\Context.cpp">
       <Filter>Renders</Filter>
     </ClCompile>
     <ClCompile Include="Renders\Shader.cpp">
       <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\Texture.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Camera.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Freedom.cpp">
+      <Filter>Viewer</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Terrain.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\DebugLine.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Mesh.cpp">
+      <Filter>Mehses</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\MeshQuad.cpp">
+      <Filter>Mehses</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\MeshPlane.cpp">
+      <Filter>Mehses</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -86,6 +107,9 @@
     <ClInclude Include="Utilities\Xml.h">
       <Filter>Utilities</Filter>
     </ClInclude>
+    <ClInclude Include="Systems\D3D.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
     <ClInclude Include="Systems\Gui.h">
       <Filter>Systems</Filter>
     </ClInclude>
@@ -104,8 +128,8 @@
     <ClInclude Include="Systems\Window.h">
       <Filter>Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Systems\D3D.h">
-      <Filter>Systems</Filter>
+    <ClInclude Include="Renders\Context.h">
+      <Filter>Renders</Filter>
     </ClInclude>
     <ClInclude Include="Renders\Shader.h">
       <Filter>Renders</Filter>
@@ -113,22 +137,46 @@
     <ClInclude Include="Renders\Texture.h">
       <Filter>Renders</Filter>
     </ClInclude>
-    <ClInclude Include="Renders\Context.h">
+    <ClInclude Include="Viewer\Camera.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Freedom.h">
+      <Filter>Viewer</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Terrain.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\DebugLine.h">
       <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Mesh.h">
+      <Filter>Mehses</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\MeshQuad.h">
+      <Filter>Mehses</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\MeshPlane.h">
+      <Filter>Mehses</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Renders">
-      <UniqueIdentifier>{75787951-8683-46ed-9aaf-9dadd92a655d}</UniqueIdentifier>
+      <UniqueIdentifier>{54da8431-fae3-4460-afc5-6899cb20a515}</UniqueIdentifier>
     </Filter>
     <Filter Include="Systems">
-      <UniqueIdentifier>{c0725f67-4e73-4980-a6f3-7b167c343f7e}</UniqueIdentifier>
+      <UniqueIdentifier>{983002a3-e2e4-4ffb-8aac-d3bcc58a49a4}</UniqueIdentifier>
     </Filter>
     <Filter Include="Utilities">
-      <UniqueIdentifier>{8c35a855-14c8-4cba-950b-efa255a09297}</UniqueIdentifier>
+      <UniqueIdentifier>{6532c3d0-88a9-4167-beba-cfd925823d98}</UniqueIdentifier>
     </Filter>
     <Filter Include="Viewer">
-      <UniqueIdentifier>{c07685f0-01aa-42ea-a9b5-98b4cf4c6bc4}</UniqueIdentifier>
+      <UniqueIdentifier>{5fca5afd-9a16-46c1-b850-8b379b5f0a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{49727568-fab0-482c-9105-582d8b80e903}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mehses">
+      <UniqueIdentifier>{ea57b7c8-e57a-41de-a0d4-051fe4bd549f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
