@@ -1,10 +1,11 @@
 #include "Framework.h"
 #include "Buffers.h"
-//------------------------------------------------------------------------------------
+
+//--------------------------------------------------------------
 // VertexBuffer
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 VertexBuffer::VertexBuffer(void* data, UINT count, UINT stride, UINT slot, bool bCpuWrite, bool bGpuWrite)
-	:data(data)
+	: data(data)
 	, count(count)
 	, stride(stride)
 	, slot(slot)
@@ -15,6 +16,7 @@ VertexBuffer::VertexBuffer(void* data, UINT count, UINT stride, UINT slot, bool 
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
 	desc.ByteWidth = stride * count;
 	desc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	
 	if (bCpuWrite == false && bGpuWrite == false)
 	{
 		desc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -33,6 +35,7 @@ VertexBuffer::VertexBuffer(void* data, UINT count, UINT stride, UINT slot, bool 
 		desc.Usage = D3D11_USAGE_STAGING;
 		desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
 	}
+
 	D3D11_SUBRESOURCE_DATA subResourceData = { 0 };
 	subResourceData.pSysMem = data;
 
@@ -42,7 +45,6 @@ VertexBuffer::VertexBuffer(void* data, UINT count, UINT stride, UINT slot, bool 
 VertexBuffer::~VertexBuffer()
 {
 	SafeRelease(buffer);
-
 }
 
 void VertexBuffer::Render()
@@ -51,25 +53,23 @@ void VertexBuffer::Render()
 	D3D::GetDC()->IASetVertexBuffers(slot, 1, &buffer, &stride, &offset);
 }
 
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 // IndexBuffer
-//------------------------------------------------------------------------------------
-
+//--------------------------------------------------------------
 IndexBuffer::IndexBuffer(void* data, UINT count)
-	:data(data)
-	, count (count)
+	: data(data)
+	, count(count)
 {
 	D3D11_BUFFER_DESC desc;
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
 	desc.ByteWidth = sizeof(UINT) * count;
 	desc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	desc.Usage = D3D11_USAGE_IMMUTABLE;
-	
+
 	D3D11_SUBRESOURCE_DATA subResourceData = { 0 };
 	subResourceData.pSysMem = data;
 
 	Check(D3D::GetDevice()->CreateBuffer(&desc, &subResourceData, &buffer));
-
 }
 
 IndexBuffer::~IndexBuffer()
@@ -79,16 +79,15 @@ IndexBuffer::~IndexBuffer()
 
 void IndexBuffer::Render()
 {
-	D3D::GetDC()->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT,0);
+	D3D::GetDC()->IASetIndexBuffer(buffer, DXGI_FORMAT_R32_UINT, 0);
 }
 
-//------------------------------------------------------------------------------------
+//--------------------------------------------------------------
 // ConstantBuffer
-//------------------------------------------------------------------------------------
-
+//--------------------------------------------------------------
 ConstantBuffer::ConstantBuffer(void* data, UINT dataSize)
-	:data(data)
-	,dataSize(dataSize)
+	: data(data)
+	, dataSize(dataSize)
 {
 	D3D11_BUFFER_DESC desc;
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
@@ -98,18 +97,17 @@ ConstantBuffer::ConstantBuffer(void* data, UINT dataSize)
 	desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 
 	Check(D3D::GetDevice()->CreateBuffer(&desc, nullptr, &buffer));
-
 }
 
 ConstantBuffer::~ConstantBuffer()
 {
-	SafeDelete(buffer);
+	SafeRelease(buffer);
 }
 
 void ConstantBuffer::Render()
 {
 	D3D11_MAPPED_SUBRESOURCE subResource;
-	D3D::GetDC()->Map(buffer,0,D3D11_MAP_WRITE_DISCARD,0,&subResource);
+	D3D::GetDC()->Map(buffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &subResource);
 	{
 		memcpy(subResource.pData, data, dataSize);
 	}

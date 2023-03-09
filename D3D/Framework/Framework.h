@@ -78,6 +78,9 @@ typedef D3DXPLANE Plane;
 #include "Renders/Context.h"
 #include "Renders/DebugLine.h"
 #include "Renders/Buffers.h"
+#include "Renders/Transform.h"
+#include "Renders/PerFrame.h"
+#include "Renders/Renderer.h"
 
 #include "Utilities/Math.h"
 #include "Utilities/String.h"
@@ -89,6 +92,10 @@ typedef D3DXPLANE Plane;
 #include "Meshes/MeshCube.h"
 #include "Meshes/MeshCylinder.h"
 #include "Meshes/MeshSphere.h"
+
+#include "Model/Model.h"
+#include "Model/ModelMesh.h"
+#include "Model/ModelRenderer.h"
 
 #include "Environment/Terrain.h"
 #include "Environment/CubeSky.h"

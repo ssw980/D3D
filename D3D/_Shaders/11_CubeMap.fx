@@ -19,12 +19,11 @@ VertexOutput VS(VertexInput input)
 	
 	output.oPosition = input.Position.xyz;
 	
-    output.Position = WorldPosition(input.Position);
-    output.Position = ViewProjection(output.Position);
+	output.Position = WorldPosition(input.Position);
+	output.Position = ViewProjection(output.Position);
 	
 	return output;
 }
-
 
 float4 PS(VertexOutput input) : SV_Target
 {
@@ -34,6 +33,4 @@ float4 PS(VertexOutput input) : SV_Target
 technique11 T0
 {
 	P_VP(P0, VS, PS)
-
-
 }

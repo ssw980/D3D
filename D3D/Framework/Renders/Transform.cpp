@@ -2,11 +2,11 @@
 #include "Transform.h"
 
 Transform::Transform()
-	:shader(nullptr)
+	: shader(nullptr)
 	, buffer(nullptr)
-	,position(0,0,0)
-	,scale(1,1,1)
-	,rotation(0,0,0)
+	, position(0, 0, 0)
+	, scale(1, 1, 1)
+	, rotation(0, 0, 0)
 {
 	D3DXMatrixIdentity(&bufferDesc.World);
 }
@@ -38,56 +38,81 @@ void Transform::SetShader(Shader* shader)
 {
 	this->shader = shader;
 
-	buffer = new ConstantBuffer(&bufferDesc,sizeof(BufferDesc));
+	buffer = new ConstantBuffer(&bufferDesc, sizeof(BufferDesc));
 	sBuffer = this->shader->AsConstantBuffer("CB_World");
 }
 
 void Transform::Position(float x, float y, float z)
 {
+	Position(Vector3(x, y, z));
 }
 
 void Transform::Position(Vector3& vec)
 {
+	position = vec;
+	UpdateWorld();
 }
 
 void Transform::Position(Vector3* vec)
 {
+	*vec = position;
 }
 
 void Transform::Rotation(float x, float y, float z)
 {
+	Rotation(Vector3(x, y, z));
 }
 
 void Transform::Rotation(Vector3& vec)
 {
+	rotation = vec;
+	UpdateWorld();
 }
 
 void Transform::Rotation(Vector3* vec)
 {
+	*vec = rotation;
 }
 
 void Transform::RotationDegree(float x, float y, float z)
 {
+	RotationDegree(Vector3(x, y, z));
 }
 
 void Transform::RotationDegree(Vector3& vec)
 {
+	Vector3 temp;
+	temp.x = Math::ToRadian(vec.x);
+	temp.y = Math::ToRadian(vec.y);
+	temp.z = Math::ToRadian(vec.z);
+
+	Rotation(temp);
 }
 
 void Transform::RotationDegree(Vector3* vec)
 {
+	Vector3 temp;
+	temp.x = Math::ToDegree(rotation.x);
+	temp.y = Math::ToDegree(rotation.y);
+	temp.z = Math::ToDegree(rotation.z);
+
+	*vec = temp;
 }
 
 void Transform::Scale(float x, float y, float z)
 {
+	Scale(Vector3(x, y, z));
 }
 
 void Transform::Scale(Vector3& vec)
 {
+	scale = vec;
+	UpdateWorld();
 }
 
 void Transform::Scale(Vector3* vec)
 {
+	*vec = scale;
 }
 
 Vector3 Transform::Forward()
@@ -107,8 +132,9 @@ Vector3 Transform::Right()
 
 void Transform::World(Matrix& matrix)
 {
-	//D3DXMatrixDecompose(,)
-	//Math::MatrixDecompose(,);
+	Math::MatrixDecompose(matrix, scale, rotation, position);
+
+	bufferDesc.World = matrix;
 }
 
 void Transform::UpdateWorld()
@@ -120,17 +146,15 @@ void Transform::UpdateWorld()
 
 	Matrix world = S * R * T;
 	bufferDesc.World = world;
-
 }
 
 void Transform::Update()
 {
-
 }
 
 void Transform::Render()
 {
-	if(shader == nullptr)
+	if (shader == nullptr) return;
 
 	buffer->Render();
 	sBuffer->SetConstantBuffer(buffer->Buffer());

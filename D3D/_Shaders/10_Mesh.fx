@@ -17,15 +17,15 @@ struct VertexOutput
 	float3 Normal : Normal;
 };
 
+
 VertexOutput VS(VertexInput input)
 {
 	VertexOutput output;
 	
-    output.Position = WorldPosition(input.Position);
-    output.Position = ViewProjection(output.Position);
+	output.Position = WorldPosition(input.Position);
+	output.Position = ViewProjection(output.Position);
 	
-	
-    output.Normal = WorldNormal(input.Normal);
+	output.Normal = WorldNormal(input.Normal);
 	
 	output.Uv = input.Uv;
 	

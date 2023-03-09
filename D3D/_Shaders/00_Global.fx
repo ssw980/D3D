@@ -3,21 +3,20 @@
 //-----------------------------------------------------------------------------
 cbuffer CB_PerFrame
 {
-    matrix View;
-    matrix ViewInverse;
-    matrix Projection;
-    matrix VP;
+	matrix View;
+	matrix ViewInverse;
+	matrix Projection;
+	matrix VP;
     
-    float4 Culling[4];
-    float4 Clipping;
+	float4 Culling[4];
+	float4 Clipping;
     
-    float Time;
-    
+	float Time;
 };
 
 cbuffer CB_World
 {
-    matrix World;
+	matrix World;
 };
 
 //-----------------------------------------------------------------------------
@@ -25,25 +24,22 @@ cbuffer CB_World
 //-----------------------------------------------------------------------------
 float4 WorldPosition(float4 position)
 {
-    return mul(position, World);
+	return mul(position, World);
 }
 
 float4 ViewProjection(float4 position)
 {
-    //return mul(position, VP); //<- Perframe 클래스 작성해야 동작함
-
-    position = mul(position, View);
-    return mul(position, Projection);
+    return mul(position, VP);
 }
 
 float3 WorldNormal(float3 normal)
 {
-    return mul(normal, (float3x3) World);
+	return mul(normal, (float3x3) World);
 }
 
 float3 ViewPosition()
 {
-    return ViewInverse._41_42_43;
+	return ViewInverse._41_42_43;
 }
 
 
@@ -52,36 +48,36 @@ float3 ViewPosition()
 //-----------------------------------------------------------------------------
 SamplerState PointSampler
 {
-    Filter = MIN_MAG_MIP_POINT;
-    AddressU = Wrap;
-    AddressV = Wrap;
+	Filter = MIN_MAG_MIP_POINT;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 SamplerState LinearSampler
 {
-    Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = Wrap;
-    AddressV = Wrap;
+	Filter = MIN_MAG_MIP_LINEAR;
+	AddressU = Wrap;
+	AddressV = Wrap;
 };
 
 RasterizerState FillMode_WireFrame
 {
-    FillMode = WireFrame;
+	FillMode = WireFrame;
 };
 
 RasterizerState FrontCounterClockwise_True
 {
-    FrontCounterClockwise = true;
+	FrontCounterClockwise = true;
 };
 
 RasterizerState CullMode_None
 {
-    CullMode = None;
+	CullMode = None;
 };
 
 DepthStencilState DepthEnable_False
 {
-    DepthEnable = false;
+	DepthEnable = false;
 };
 
 //-----------------------------------------------------------------------------

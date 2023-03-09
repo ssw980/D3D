@@ -21,9 +21,9 @@ VertexOutput VS(VertexInput input)
 {
 	VertexOutput output;
 	
-    output.Position = WorldPosition(input.Position);
-    output.Position = ViewProjection(output.Position);
-    output.Normal = WorldNormal(input.Normal);
+	output.Position = WorldPosition(input.Position);
+	output.Position = ViewProjection(output.Position);
+	output.Normal = WorldNormal(input.Normal);
 	
 	output.Uv = input.Uv;
 	

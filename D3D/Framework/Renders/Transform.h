@@ -11,7 +11,6 @@ public:
 
 	void SetShader(Shader* shader);
 
-
 	void Position(float x, float y, float z);
 	void Position(Vector3& vec);
 	void Position(Vector3* vec);
@@ -32,14 +31,11 @@ public:
 	Vector3 Up();
 	Vector3 Right();
 
-
 	void World(Matrix& matrix);
 	Matrix& World() { return bufferDesc.World; }
 
-
 private:
 	void UpdateWorld();
-
 
 public:
 	void Update();
@@ -49,7 +45,7 @@ private:
 	struct BufferDesc
 	{
 		Matrix World;
-	}bufferDesc;
+	} bufferDesc;
 
 private:
 	Shader* shader;
