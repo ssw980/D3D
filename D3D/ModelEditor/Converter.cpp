@@ -23,6 +23,9 @@ Converter::~Converter()
 
 		SafeDelete(mesh);
 	}
+
+	for (asMaterial* material : materials)
+		SafeDelete(material);
 }	
 
 void Converter::ReadFile(wstring file)
@@ -51,6 +54,7 @@ void Converter::ReadFile(wstring file)
 void Converter::ExportMesh(wstring savePath)
 {
 	ReadBoneData(scene->mRootNode, -1, -1);
+	ReadSkinData();
 	WriteMeshData(L"../../_Models/" + savePath + L".mesh");
 }
 
@@ -131,6 +135,56 @@ void Converter::ReadMeshData(aiNode* node, int index)
 	meshes.push_back(mesh);
 }
 
+void Converter::ReadSkinData()
+{
+	for (UINT i = 0; i < scene->mNumMeshes; i++)
+	{
+		aiMesh* aiMesh = scene->mMeshes[i];
+
+		if (aiMesh->HasBones() == false) continue;
+
+		asMesh* mesh = meshes[i];
+
+		vector<asBoneWeights> boneWeights;
+		boneWeights.assign(mesh->Vertices.size(), asBoneWeights());
+
+		for (UINT b = 0; b < aiMesh->mNumBones; b++)
+		{
+			aiBone* aiMeshBone = aiMesh->mBones[b];
+
+			UINT boneIndex = 0;
+
+			for (asBone* bone : bones)
+			{
+				if (bone->Name == (string)aiMeshBone->mName.C_Str())
+				{
+					boneIndex = bone->Index;
+					break;
+				}
+			}//for(bone)
+
+			for (UINT w = 0; w < aiMeshBone->mNumWeights; w++)
+			{
+				UINT index = aiMeshBone->mWeights[w].mVertexId;
+				float weight = aiMeshBone->mWeights[w].mWeight;
+
+				boneWeights[index].AddWeights(boneIndex, weight);
+			}//for(w)
+		}//for(b)
+
+		for (UINT w = 0; w < boneWeights.size(); w++)
+		{
+			boneWeights[w].Normalize();
+
+			asBlendWeigt blendWeight;
+			boneWeights[w].GetBlendWeigts(blendWeight);
+
+			mesh->Vertices[w].BlendIndices = blendWeight.Indices;
+			mesh->Vertices[w].BlendWeights = blendWeight.Weights;
+		}
+	}
+}
+
 void Converter::WriteMeshData(wstring savePath)
 {
 	Path::CreateFolders(Path::GetDirectoryName(savePath));
@@ -177,13 +231,14 @@ void Converter::WriteMeshData(wstring savePath)
 
 void Converter::ExportMaterial(wstring savePath, bool bOverWrite)
 {
-	savePath = L"../../_Textures/" + savePath +  L".material";
+	savePath = L"../../_Textures/" + savePath + L".material";
 
 	if (bOverWrite == false)
 	{
 		if (Path::ExistFile(savePath) == true)
 			return;
 	}
+
 	ReadMaterial();
 	WriteMaterialData(savePath);
 }
@@ -195,10 +250,12 @@ void Converter::ReadMaterial()
 		aiMaterial* srcMaterial = scene->mMaterials[i];
 		if (FoundMaterialData(srcMaterial) == false)
 			continue;
+
 		asMaterial* material = new asMaterial();
 		material->Name = srcMaterial->GetName().C_Str();
 
 		aiColor3D color;
+
 		srcMaterial->Get(AI_MATKEY_COLOR_AMBIENT, color);
 		material->Ambient = Color(color.r, color.g, color.b, 1.f);
 
@@ -208,14 +265,14 @@ void Converter::ReadMaterial()
 		srcMaterial->Get(AI_MATKEY_COLOR_SPECULAR, color);
 		material->Specular = Color(color.r, color.g, color.b, 1.f);
 
-		srcMaterial->Get(AI_MATKEY_SHININESS,material->Specular.a);
+		srcMaterial->Get(AI_MATKEY_SHININESS, material->Specular.a);
 
 		srcMaterial->Get(AI_MATKEY_COLOR_EMISSIVE, color);
 		material->Emissive = Color(color.r, color.g, color.b, 1.f);
 
 		aiString file;
 
-		srcMaterial->GetTexture(aiTextureType_DIFFUSE,0, &file);
+		srcMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &file);
 		material->DiffuseFile = file.C_Str();
 
 		srcMaterial->GetTexture(aiTextureType_SPECULAR, 0, &file);
@@ -264,7 +321,7 @@ void Converter::WriteMaterialData(wstring savePath)
 	{
 		Xml::XMLElement* node = document->NewElement("Material");
 		root->LinkEndChild(node);
-
+		
 		Xml::XMLElement* element = nullptr;
 
 		element = document->NewElement("Name");
@@ -290,7 +347,6 @@ void Converter::WriteMaterialData(wstring savePath)
 		element->SetAttribute("A", material->Ambient.a);
 		node->LinkEndChild(element);
 
-
 		element = document->NewElement("Diffuse");
 		element->SetAttribute("R", material->Diffuse.r);
 		element->SetAttribute("G", material->Diffuse.g);
@@ -315,17 +371,192 @@ void Converter::WriteMaterialData(wstring savePath)
 
 	document->SaveFile((folder + file).c_str());
 	SafeDelete(document);
-	
 }
 
 string Converter::WriteTexture(string saveFolder, string file)
 {
-	if (file.length() < 1) return;
-	//Embeded -> Kachujin
+	if (file.length() < 1) return "";
 
-	//Extern Texture -> Tower, B787
+	string fileName = Path::GetFileName(file);
+	const aiTexture* texture = scene->GetEmbeddedTexture(file.c_str());
 
-	//No Texture -> Tank
+	string path = "";
 	
-	return string();
+	if (texture != nullptr)
+	{
+		path = saveFolder + Path::GetFileNameWithoutExtension(file) + ".png";
+		
+		BinaryWriter* w = new BinaryWriter(String::ToWString(path));
+		w->Byte(texture->pcData, texture->mWidth);
+		SafeDelete(w);
+	}
+	else
+	{
+		string directory = Path::GetDirectoryName(String::ToString(this->file));
+		string origin = directory + file;
+		String::Replace(&origin, "\\", "/");
+
+		if (Path::ExistFile(origin) == false)
+			return "";
+
+		path = saveFolder + fileName;
+		CopyFileA(origin.c_str(), path.c_str(), FALSE);
+
+		String::Replace(&path, "../../_Textures/", "");
+	}
+
+	return Path::GetFileName(path);
+}
+
+void Converter::ExportAnimClip(UINT index, wstring savePath)
+{
+	savePath = L"../../_Models/" + savePath + L".clip";
+
+	asClip* clip = ReadClipData(scene->mAnimations[index]);
+	WriteClipData(clip, savePath);
+}
+
+asClip* Converter::ReadClipData(aiAnimation* animation)
+{
+	asClip* clip = new asClip();
+	clip->Name = animation->mName.C_Str();
+	clip->FrameRate = (float)animation->mTicksPerSecond;
+	clip->FrameCount = (UINT)animation->mDuration + 1;
+
+	vector<asClipNode> aniNodeInfos;
+	for (UINT i = 0; i < animation->mNumChannels; i++)
+	{
+		aiNodeAnim* aniNode = animation->mChannels[i];
+
+		asClipNode aniNodeInfo;
+		aniNodeInfo.Name = aniNode->mNodeName;
+
+		UINT keyCount = max(aniNode->mNumPositionKeys, aniNode->mNumScalingKeys);
+		keyCount = max(keyCount, aniNode->mNumRotationKeys);
+
+		asKeyFrameData frameData;
+		for (UINT k = 0; k < keyCount; k++)
+		{
+			bool bFound = false;
+			UINT t = aniNodeInfo.Keyframe.size();
+
+			//PositionKey
+			if (fabsf((float)aniNode->mPositionKeys[k].mTime - (float)t) <= D3DX_16F_EPSILON)
+			{
+				aiVectorKey key = aniNode->mPositionKeys[k];
+				memcpy_s(&frameData.Translation, sizeof(Vector3), &key.mValue, sizeof(aiVector3D));
+				frameData.Frame = (float)aniNode->mPositionKeys[k].mTime;
+
+				bFound = true;
+			}
+
+			//RotationKey
+			if (fabsf((float)aniNode->mRotationKeys[k].mTime - (float)t) <= D3DX_16F_EPSILON)
+			{
+				aiQuatKey key = aniNode->mRotationKeys[k];
+				
+				frameData.Rotation.x = key.mValue.x;
+				frameData.Rotation.y = key.mValue.y;
+				frameData.Rotation.z = key.mValue.z;
+				frameData.Rotation.w = key.mValue.w;
+
+				frameData.Frame = (float)aniNode->mRotationKeys[k].mTime;
+
+				bFound = true;
+			}
+
+			//ScalingKey
+			if (fabsf((float)aniNode->mScalingKeys[k].mTime - (float)t) <= D3DX_16F_EPSILON)
+			{
+				aiVectorKey key = aniNode->mScalingKeys[k];
+				memcpy_s(&frameData.Scale, sizeof(Vector3), &key.mValue, sizeof(aiVector3D));
+				frameData.Frame = (float)aniNode->mScalingKeys[k].mTime;
+
+				bFound = true;
+			}
+
+			if (bFound == true)
+				aniNodeInfo.Keyframe.push_back(frameData);
+		}//for(k)
+
+		if (aniNodeInfo.Keyframe.size() < clip->FrameCount)
+		{
+			UINT count = clip->FrameCount - aniNodeInfo.Keyframe.size();
+			asKeyFrameData lastKeyframe = aniNodeInfo.Keyframe.back();
+
+			for (UINT n = 0; n < count; n++)
+				aniNodeInfo.Keyframe.push_back(lastKeyframe);
+		}
+
+		aniNodeInfos.push_back(aniNodeInfo);
+
+	}//for(i)
+
+	ReadKeyframe(clip, scene->mRootNode, aniNodeInfos);
+
+	return clip;
+}
+
+void Converter::ReadKeyframe(asClip* clip, aiNode* node, vector<struct asClipNode>& aniNodeInfos)
+{
+	asKeyFrame* keyframe = new asKeyFrame();
+	keyframe->BoneName = node->mName.C_Str();
+
+	asClipNode* asClipNode = nullptr;
+
+	for (UINT i = 0; i < aniNodeInfos.size(); i++)
+	{
+		if (aniNodeInfos[i].Name == node->mName)
+		{
+			asClipNode = &aniNodeInfos[i];
+			break;
+		}
+	}
+
+	for (UINT i = 0; i < clip->FrameCount; i++)
+	{
+		asKeyFrameData frameData;
+
+		if (asClipNode == nullptr)
+		{
+			frameData.Frame = (float)i;
+
+			Matrix transform(node->mTransformation[0]);
+			D3DXMatrixTranspose(&transform, &transform);
+			D3DXMatrixDecompose(&frameData.Scale, &frameData.Rotation, &frameData.Translation, &transform);
+		}
+		else
+		{
+			frameData = asClipNode->Keyframe[i];
+		}
+
+		keyframe->Trnasforms.push_back(frameData);
+	}
+
+	clip->KeyFrames.push_back(keyframe);
+
+	for (UINT i = 0; i < node->mNumChildren; i++)
+		ReadKeyframe(clip, node->mChildren[i], aniNodeInfos);
+}
+
+void Converter::WriteClipData(asClip* clip, wstring savePath)
+{
+	Path::CreateFolders(Path::GetDirectoryName(savePath));
+
+	BinaryWriter* w = new BinaryWriter(savePath);
+
+	w->String(clip->Name);
+	w->Float(clip->FrameRate);
+	w->UInt(clip->FrameCount);
+
+	w->UInt(clip->KeyFrames.size());
+	for (asKeyFrame* keyframe : clip->KeyFrames)
+	{
+		w->String(keyframe->BoneName);
+
+		w->UInt(keyframe->Trnasforms.size());
+		w->Byte(&keyframe->Trnasforms[0], sizeof(asKeyFrameData) * keyframe->Trnasforms.size());
+	}
+
+	SafeDelete(w);
 }
